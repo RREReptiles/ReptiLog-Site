@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReptiLog – Professional Herpetology &amp; Entomology Management</title>
+  <meta name="description" content="ReptiLog is a professional-grade Herpetoculture and Entomology management app for serious keepers and breeders. Track, breed, and scale your collection with precision." />
+
+  <!-- Tailwind CSS (compiled from source — no CDN dependency) -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Global ── */
+    body { background-color: #111111; color: #E2DCCA; }
+
+    /* ── Noise texture overlay (subtle depth) ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Crimson gradient glow behind hero ── */
+    .hero-glow {
+      position: absolute;
+      top: -160px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 700px;
+      background: radial-gradient(ellipse at center, rgba(158,20,3,0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Animated gradient border on feature cards ── */
+    .feature-card {
+      position: relative;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: #9e1403;
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(158,20,3,0.15);
+    }
+
+    /* ── Pricing card highlight ── */
+    .pricing-pro {
+      background: linear-gradient(145deg, #1a1a1a 0%, #1f0b09 100%);
+      border: 1px solid #9e1403;
+      box-shadow: 0 0 40px rgba(158,20,3,0.2), inset 0 1px 0 rgba(226,220,202,0.05);
+    }
+    .pricing-basic {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+    }
+
+    /* ── Divider line ── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #2a2a2a 30%, #2a2a2a 70%, transparent);
+    }
+
+    /* ── Smooth badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Data-grid decorative dots ── */
+    .dot-grid {
+      background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* ── App Store / Play Store btn ── */
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.25s ease;
+      border: 1px solid #3a3a3a;
+      background: #1a1a1a;
+      color: #E2DCCA;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .store-btn:hover {
+      border-color: #9e1403;
+      background: #1f1010;
+      box-shadow: 0 0 20px rgba(158,20,3,0.3);
+    }
+
+    /* ── Scroll-reveal utility (JS-enhanced — visible by default for no-JS/SSR) ── */
+    .reveal { transition: opacity 0.6s ease, transform 0.6s ease; }
+    .js-reveal .reveal { opacity: 0; transform: translateY(24px); }
+    .js-reveal .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Tag chip ── */
+    .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.05em; }
+
+    /* ── Pricing check icon ── */
+    .check-icon { flex-shrink: 0; width: 18px; height: 18px; }
+
+    /* ── Nav ── */
+    .nav-link { color: #a0998a; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: #E2DCCA; }
+
+    /* ── Mockup container shimmer ── */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, #1a1a1a 0%, #222 40%, #2a2a2a 60%, #1a1a1a 100%);
+      background-size: 1200px 100%;
+      animation: shimmer 2.4s infinite linear;
+    }
+
+    /* ── Mobile menu ── */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+  </style>
+</head>
+
+<body class="font-sans antialiased relative z-10">
+
+  <!-- ══════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════ -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <!-- REPLACE: swap this SVG icon with your actual app logo PNG/SVG -->
+        <div class="w-9 h-9 rounded-lg bg-crimson flex items-center justify-center shadow-lg group-hover:shadow-crimson/40 transition-shadow">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 2C8 2 5 5.5 5 9c0 2.5 1.2 4.7 3 6.1V17a2 2 0 002 2h4a2 2 0 002-2v-1.9c1.8-1.4 3-3.6 3-6.1 0-3.5-3-7-7-7z"/>
+          </svg>
+        </div>
+        <span class="text-parchment font-bold text-xl tracking-tight">Repti<span class="text-crimson">Log</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="hidden md:flex items-center gap-8">
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#how-it-works" class="nav-link">Technology</a></li>
+        <li><a href="#pricing" class="nav-link">Pricing</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <!-- CTA button -->
+      <a href="#pricing"
+         class="hidden md:inline-flex items-center gap-2 bg-crimson hover:bg-crimson-light text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-lg hover:shadow-crimson/40">
+        Get Started
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+        </svg>
+      </a>
+
+      <!-- Mobile hamburger -->
+      <button id="menu-btn" class="md:hidden p-2 rounded-lg text-parchment/60 hover:text-parchment transition-colors" aria-label="Toggle menu">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden bg-surface-2/95 backdrop-blur-xl border-t border-border-subtle">
+      <ul class="flex flex-col px-6 py-4 gap-4">
+        <li><a href="#features"    class="nav-link text-base" onclick="closeMobileMenu()">Features</a></li>
+        <li><a href="#how-it-works" class="nav-link text-base" onclick="closeMobileMenu()">Technology</a></li>
+        <li><a href="#pricing"    class="nav-link text-base" onclick="closeMobileMenu()">Pricing</a></li>
+        <li><a href="#contact"    class="nav-link text-base" onclick="closeMobileMenu()">Contact</a></li>
+        <li>
+          <a href="#pricing" onclick="closeMobileMenu()"
+             class="inline-flex items-center gap-2 bg-crimson text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors w-full justify-center">
+            Get Started
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════ -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden dot-grid pt-28 pb-20 px-6">
+      <div class="hero-glow"></div>
+
+      <!-- Top badge -->
+      <div class="reveal mb-6 z-10">
+        <span class="badge bg-crimson/10 border border-crimson/30 text-crimson">
+          <span class="w-1.5 h-1.5 rounded-full bg-crimson inline-block animate-pulse"></span>
+          Professional-Grade Herpetoculture Management
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="reveal relative z-10 text-center font-black text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.05] tracking-tight max-w-5xl">
+        <span class="text-parchment">Professional</span><br/>
+        <span class="text-parchment">Herpetology &amp;</span><br/>
+        <span class="bg-gradient-to-r from-crimson to-crimson-light bg-clip-text text-transparent">
+          Entomology Management.
+        </span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="reveal relative z-10 mt-6 text-center text-parchment/60 text-lg sm:text-xl max-w-2xl leading-relaxed">
+        Track, breed, and scale your collection with precision.<br class="hidden sm:block"/>
+        <span class="text-parchment/80">Local-first reliability</span> with
+        <span class="text-parchment/80">cloud-powered insights.</span>
+      </p>
+
+      <!-- App Store Buttons -->
+      <div class="reveal relative z-10 mt-10 flex flex-wrap items-center justify-center gap-4">
+        <!-- REPLACE: link href to your actual App Store URL -->
+        <a href="#" class="store-btn">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          <div class="text-left">
+            <div class="text-[10px] text-parchment/50 uppercase tracking-widest leading-none mb-0.5">Download on the</div>
+            <div class="text-sm font-semibold leading-none">App Store</div>
+          </div>
+        </a>
+
+        <!-- REPLACE: link href to your actual Google Play URL -->
+        <a href="#" class="store-btn">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.18 23.76c.31.17.67.19 1.01.07L14.76 12 3.5.2C3.18.07 2.83.1 2.54.27 2.01.59 1.67 1.17 1.67 1.79v20.42c0 .62.34 1.2.87 1.52h-.37l.01.03zM16.34 13.57l2.59-2.59-2.59-2.59-2.41 2.41 2.41 2.77zM5.13 2.01l9.86 9.99-9.86 9.99V2.01zm13.41 7.87l-1.42-1.42-2.41 2.41 1.42 1.43 2.41-1.42zm0 4.24l-2.41-1.43-1.42 1.43 1.42 1.42 2.41-1.42z"/>
+          </svg>
+          <div class="text-left">
+            <div class="text-[10px] text-parchment/50 uppercase tracking-widest leading-none mb-0.5">Get it on</div>
+            <div class="text-sm font-semibold leading-none">Google Play</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Stat bar -->
+      <div class="reveal relative z-10 mt-12 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-center">
+        <div>
+          <div class="text-2xl font-bold text-parchment">Offline-First</div>
+          <div class="text-xs text-parchment/40 uppercase tracking-widest mt-0.5">Architecture</div>
+        </div>
+        <div class="w-px h-8 bg-border-subtle hidden sm:block"></div>
+        <div>
+          <div class="text-2xl font-bold text-parchment">100%</div>
+          <div class="text-xs text-parchment/40 uppercase tracking-widest mt-0.5">Data Ownership</div>
+        </div>
+        <div class="w-px h-8 bg-border-subtle hidden sm:block"></div>
+        <div>
+          <div class="text-2xl font-bold text-parchment">Multi-Species</div>
+          <div class="text-xs text-parchment/40 uppercase tracking-widest mt-0.5">Support</div>
+        </div>
+      </div>
+
+      <!-- ── App Mockup Placeholder ── -->
+      <!-- REPLACE: remove the placeholder below and insert an <img> or <picture> element
+           pointing to your dashboard screenshot. Recommended size: 1280×800px (or 2x for retina).
+           Example:
+             <img src="./assets/images/dashboard-mockup.png"
+                  alt="ReptiLog dashboard screenshot"
+                  class="w-full max-w-5xl mx-auto rounded-2xl shadow-2xl" />
+      -->
+      <div class="reveal relative z-10 mt-16 w-full max-w-5xl mx-auto">
+        <!-- Outer glow frame -->
+        <div class="relative rounded-2xl p-px overflow-hidden"
+             style="background: linear-gradient(135deg, #9e1403 0%, #2a2a2a 50%, #9e1403 100%);">
+          <div class="rounded-2xl overflow-hidden">
+            <!-- Browser chrome bar -->
+            <div class="bg-surface-3 flex items-center gap-2 px-4 py-3 border-b border-border-subtle">
+              <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/60"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/60"></span>
+              <div class="flex-1 mx-4 h-5 rounded-full bg-surface flex items-center px-3">
+                <span class="text-[10px] text-parchment/20 tag">reptilog · dashboard</span>
+              </div>
+            </div>
+
+            <!-- Mockup body -->
+            <div class="shimmer h-80 sm:h-[420px] lg:h-[520px] flex flex-col items-center justify-center gap-4">
+              <!-- REPLACE: delete this entire <div> block and insert your real screenshot <img> here -->
+              <div class="flex items-center gap-3 opacity-20">
+                <svg class="w-12 h-12 text-parchment" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <p class="text-parchment/20 text-sm tag">
+                [ dashboard screenshot · drop your mockup here ]
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shadow glow under mockup -->
+        <div class="absolute inset-x-10 -bottom-8 h-16 bg-crimson/20 blur-2xl rounded-full -z-10"></div>
+      </div>
+
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════
+         FEATURES GRID
+    ═══════════════════════════════════════════ -->
+    <section id="features" class="py-28 px-6">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Section header -->
+        <div class="reveal text-center mb-16">
+          <span class="badge bg-crimson/10 border border-crimson/30 text-crimson mb-4">Core Features</span>
+          <h2 class="text-4xl sm:text-5xl font-black text-parchment leading-tight">
+            Every tool a serious<br/>keeper needs.
+          </h2>
+          <p class="mt-4 text-parchment/50 text-lg max-w-xl mx-auto">
+            Built from the ground up for professional breeders and advanced hobbyists.
+          </p>
+        </div>
+
+        <!-- 2×2 Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Feature 1: The Roster -->
+          <div class="feature-card rounded-2xl p-8 reveal">
+            <div class="flex items-start gap-5">
+              <!-- Icon -->
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-crimson/10 border border-crimson/20 flex items-center justify-center">
+                <!-- REPLACE: swap with your preferred icon SVG or <img> -->
+                <svg class="w-6 h-6 text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-parchment font-bold text-xl mb-2">The Roster</h3>
+                <p class="text-parchment/50 leading-relaxed">
+                  Manage reptiles, arachnids, amphibians, and invertebrates in one unified interface.
+                  Filter by category, species, morph, or genetics. Every animal gets a full profile.
+                </p>
+              </div>
+            </div>
+            <!-- Tags -->
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Multi-Class Support</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Genetics Tracking</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Advanced Filtering</span>
+            </div>
+          </div>
+
+          <!-- Feature 2: Master Species Library -->
+          <div class="feature-card rounded-2xl p-8 reveal">
+            <div class="flex items-start gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-crimson/10 border border-crimson/20 flex items-center justify-center">
+                <!-- REPLACE: swap with your preferred icon -->
+                <svg class="w-6 h-6 text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-parchment font-bold text-xl mb-2">Master Species Library</h3>
+                <p class="text-parchment/50 leading-relaxed">
+                  Access a global database of care parameters including Ferguson zones, temperature gradients,
+                  and humidity ranges. Create facility-specific overrides for your collection.
+                </p>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Ferguson Zones</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Custom Overrides</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Global DB</span>
+            </div>
+          </div>
+
+          <!-- Feature 3: Advanced Logbook -->
+          <div class="feature-card rounded-2xl p-8 reveal">
+            <div class="flex items-start gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-crimson/10 border border-crimson/20 flex items-center justify-center">
+                <!-- REPLACE: swap with your preferred icon -->
+                <svg class="w-6 h-6 text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-parchment font-bold text-xl mb-2">Advanced Logbook</h3>
+                <p class="text-parchment/50 leading-relaxed">
+                  Log feedings, weights, sheds, and veterinary visits with a unified tagging system
+                  that links data across modules. Full history at a glance.
+                </p>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Cross-Module Tags</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Vet Records</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Weight Charts</span>
+            </div>
+          </div>
+
+          <!-- Feature 4: Breeder Tools -->
+          <div class="feature-card rounded-2xl p-8 reveal">
+            <div class="flex items-start gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-crimson/10 border border-crimson/20 flex items-center justify-center">
+                <!-- REPLACE: swap with your preferred icon -->
+                <svg class="w-6 h-6 text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-parchment font-bold text-xl mb-2">Breeder Tools</h3>
+                <p class="text-parchment/50 leading-relaxed">
+                  Track mating pairs, clutch dates, and full incubation pipelines. Get predictive
+                  hatch estimates and alerts so you never miss a critical window.
+                </p>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Clutch Pipelines</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Hatch Predictions</span>
+              <span class="tag px-2.5 py-1 rounded-md bg-surface text-parchment/40 border border-border-subtle">Pair Tracking</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════
+         HOW IT WORKS — THE TECH EDGE
+    ═══════════════════════════════════════════ -->
+    <section id="how-it-works" class="py-28 px-6 relative overflow-hidden">
+
+      <!-- Background decoration -->
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-crimson/5 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto">
+        <div class="reveal text-center mb-16">
+          <span class="badge bg-crimson/10 border border-crimson/30 text-crimson mb-4">The Technology</span>
+          <h2 class="text-4xl sm:text-5xl font-black text-parchment leading-tight">
+            Built for the real world.<br/>
+            <span class="text-parchment/40">Not just the Wi-Fi zone.</span>
+          </h2>
+        </div>
+
+        <!-- Main tech highlight: Offline-First -->
+        <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+
+          <!-- Left: Copy -->
+          <div>
+            <div class="inline-flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-lg bg-crimson flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M18.364 5.636a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M6.343 6.343a8 8 0 000 11.314M9.172 9.172a4 4 0 000 5.656M12 12h.01"/>
+                </svg>
+              </div>
+              <span class="text-parchment/40 text-sm font-mono uppercase tracking-widest">Offline-First Architecture</span>
+            </div>
+
+            <h3 class="text-3xl sm:text-4xl font-black text-parchment mb-4">
+              Your data is always available.
+              <br/>
+              <span class="text-crimson">No signal? No problem.</span>
+            </h3>
+
+            <p class="text-parchment/50 text-lg leading-relaxed mb-6">
+              Reptile rooms, basements, and remote facilities often have poor or zero reception.
+              ReptiLog stores everything locally on your device first, so you can log feedings,
+              record weights, and update animal records without ever touching a cell tower.
+            </p>
+
+            <p class="text-parchment/50 text-lg leading-relaxed mb-8">
+              When connectivity returns, our cloud sync engine — powered by Supabase — quietly
+              reconciles your data in the background. No conflicts, no data loss, no interruptions.
+            </p>
+
+            <!-- Highlights -->
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-crimson/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-crimson" fill="currentColor" viewBox="0 0 12 12">
+                    <path d="M10 3L5 8.5 2 5.5 1 6.5l4 4 6-7z"/>
+                  </svg>
+                </div>
+                <span class="text-parchment/70 text-sm">SQLite local database — instant reads &amp; writes</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-crimson/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-crimson" fill="currentColor" viewBox="0 0 12 12">
+                    <path d="M10 3L5 8.5 2 5.5 1 6.5l4 4 6-7z"/>
+                  </svg>
+                </div>
+                <span class="text-parchment/70 text-sm">Supabase cloud sync — real-time when connected</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-crimson/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-crimson" fill="currentColor" viewBox="0 0 12 12">
+                    <path d="M10 3L5 8.5 2 5.5 1 6.5l4 4 6-7z"/>
+                  </svg>
+                </div>
+                <span class="text-parchment/70 text-sm">Conflict-free data reconciliation</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-crimson/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-crimson" fill="currentColor" viewBox="0 0 12 12">
+                    <path d="M10 3L5 8.5 2 5.5 1 6.5l4 4 6-7z"/>
+                  </svg>
+                </div>
+                <span class="text-parchment/70 text-sm">Your data — never sold, never shared</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right: Visualisation card -->
+          <div class="relative">
+            <!-- Diagram card -->
+            <div class="bg-surface-2 border border-border-subtle rounded-2xl p-8 relative overflow-hidden">
+              <!-- Decorative glow -->
+              <div class="absolute top-0 right-0 w-48 h-48 bg-crimson/8 rounded-full blur-3xl pointer-events-none"></div>
+
+              <!-- Device → Cloud diagram -->
+              <div class="relative z-10 space-y-4">
+
+                <!-- Device layer -->
+                <div class="bg-surface-3 border border-border-subtle rounded-xl p-4 flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-parchment/5 border border-border-subtle flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-parchment/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-parchment/80 text-sm font-semibold">Your Device</div>
+                    <div class="text-parchment/30 text-xs tag mt-0.5">SQLite · Local-first · Always available</div>
+                  </div>
+                  <span class="badge bg-green-900/40 border border-green-700/30 text-green-400 text-[10px]">● ONLINE</span>
+                </div>
+
+                <!-- Arrow down -->
+                <div class="flex flex-col items-center gap-1 py-1">
+                  <div class="text-parchment/20 text-xs tag">Background sync</div>
+                  <div class="flex flex-col items-center gap-0.5">
+                    <div class="w-px h-4 bg-crimson/40"></div>
+                    <div class="w-2 h-2 border-r-2 border-b-2 border-crimson/40 rotate-45 -mt-1.5"></div>
+                  </div>
+                </div>
+
+                <!-- Cloud layer -->
+                <div class="bg-surface-3 border border-crimson/20 rounded-xl p-4 flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-crimson/10 border border-crimson/20 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-parchment/80 text-sm font-semibold">Supabase Cloud</div>
+                    <div class="text-parchment/30 text-xs tag mt-0.5">Encrypted · Real-time · Pro tier</div>
+                  </div>
+                  <span class="badge bg-crimson/10 border border-crimson/30 text-crimson text-[10px]">PRO</span>
+                </div>
+
+                <!-- Metrics row -->
+                <div class="grid grid-cols-3 gap-3 pt-2">
+                  <div class="bg-surface border border-border-subtle rounded-lg p-3 text-center">
+                    <div class="text-parchment/70 font-bold text-lg">0ms</div>
+                    <div class="text-parchment/30 text-[10px] tag">local latency</div>
+                  </div>
+                  <div class="bg-surface border border-border-subtle rounded-lg p-3 text-center">
+                    <div class="text-parchment/70 font-bold text-lg">E2E</div>
+                    <div class="text-parchment/30 text-[10px] tag">encryption</div>
+                  </div>
+                  <div class="bg-surface border border-border-subtle rounded-lg p-3 text-center">
+                    <div class="text-parchment/70 font-bold text-lg">100%</div>
+                    <div class="text-parchment/30 text-[10px] tag">uptime local</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════
+         PRICING
+    ═══════════════════════════════════════════ -->
+    <section id="pricing" class="py-28 px-6">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="reveal text-center mb-16">
+          <span class="badge bg-crimson/10 border border-crimson/30 text-crimson mb-4">Pricing</span>
+          <h2 class="text-4xl sm:text-5xl font-black text-parchment">
+            Start free. Scale with your collection.
+          </h2>
+          <p class="mt-4 text-parchment/50 text-lg max-w-lg mx-auto">
+            ReptiLog grows with your operation — from a first rescue to a professional breeding facility.
+          </p>
+        </div>
+
+        <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+
+          <!-- ── Basic (Free) ── -->
+          <div class="pricing-basic rounded-2xl p-8 flex flex-col">
+            <div class="mb-6">
+              <div class="text-parchment/40 text-sm font-semibold uppercase tracking-widest mb-2">Basic</div>
+              <div class="flex items-end gap-2 mb-3">
+                <span class="text-5xl font-black text-parchment">Free</span>
+              </div>
+              <p class="text-parchment/40 text-sm leading-relaxed">
+                Perfect for hobbyists and small collections. Everything you need to get organized — no cost, no commitment.
+              </p>
+            </div>
+
+            <ul class="space-y-3 flex-1 mb-8">
+              <li class="flex items-center gap-3">
+                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-parchment/60 text-sm">Up to <span class="text-parchment font-semibold">10 active animals</span></span>
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-parchment/60 text-sm"><span class="text-parchment font-semibold">Local-only</span> storage — always offline-first</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-parchment/60 text-sm">Standard species care library</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-parchment/60 text-sm">Basic logbook (feedings, weights, sheds)</span>
+              </li>
+              <li class="flex items-center gap-3 opacity-40">
+                <svg class="check-icon text-parchment/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span class="text-parchment/40 text-sm">Cloud sync</span>
+              </li>
+              <li class="flex items-center gap-3 opacity-40">
+                <svg class="check-icon text-parchment/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span class="text-parchment/40 text-sm">Advanced incubation tracking</span>
+              </li>
+              <li class="flex items-center gap-3 opacity-40">
+                <svg class="check-icon text-parchment/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span class="text-parchment/40 text-sm">Custom care parameters</span>
+              </li>
+            </ul>
+
+            <!-- REPLACE: link to your app download or sign-up page -->
+            <a href="#"
+               class="w-full text-center py-3.5 rounded-xl border border-border-subtle text-parchment/70 font-semibold text-sm hover:border-parchment/30 hover:text-parchment transition-colors">
+              Download Free
+            </a>
+          </div>
+
+          <!-- ── Pro ── -->
+          <div class="pricing-pro rounded-2xl p-8 flex flex-col relative overflow-hidden">
+            <!-- Glow blob -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-crimson/10 rounded-full blur-3xl pointer-events-none -z-0"></div>
+
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-2">
+                <div class="text-crimson text-sm font-semibold uppercase tracking-widest">Pro</div>
+                <span class="badge bg-crimson text-white text-[10px] border-0">Most Popular</span>
+              </div>
+
+              <div class="flex items-end gap-2 mb-3">
+                <!-- ⚠️ REPLACE: set your actual Pro subscription price before going live.
+                     Example: change '$X' to '$9.99' or '$4.99' etc. -->
+                <span class="text-5xl font-black text-parchment" data-placeholder="pro-price">$X</span>
+                <span class="text-parchment/40 text-sm mb-2">/ month</span>
+              </div>
+              <p class="text-parchment/50 text-sm leading-relaxed mb-6">
+                For professional breeders and serious keepers. Unlock unlimited animals, cloud sync, and advanced tools.
+              </p>
+
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-center gap-3">
+                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-parchment/80 text-sm"><span class="text-parchment font-semibold">Unlimited</span> active animals</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-parchment/80 text-sm">Full <span class="text-parchment font-semibold">Supabase cloud sync</span></span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-parchment/80 text-sm"><span class="text-parchment font-semibold">Custom care parameters</span> per facility</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-parchment/80 text-sm"><span class="text-parchment font-semibold">Advanced incubation</span> tracking &amp; hatch predictions</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-parchment/80 text-sm">Full breeder pipeline &amp; genetics tools</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-parchment/80 text-sm">Priority support</span>
+                </li>
+              </ul>
+
+              <!-- REPLACE: link to your Pro subscription or app purchase page -->
+              <a href="#"
+                 class="relative w-full text-center py-3.5 rounded-xl bg-crimson hover:bg-crimson-light text-white font-bold text-sm transition-colors shadow-lg hover:shadow-crimson/40 block">
+                Get Pro
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Enterprise callout -->
+        <div class="reveal mt-8 text-center">
+          <p class="text-parchment/30 text-sm">
+            Running a large-scale breeding operation?
+            <!-- REPLACE: update href with your actual contact/email -->
+            <a href="mailto:contact@redrockexoticreptiles.com" class="text-crimson hover:text-crimson-light underline underline-offset-2 transition-colors">
+              Contact us for facility licensing.
+            </a>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer id="contact" class="border-t border-border-subtle bg-surface-2">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+
+        <!-- Brand column -->
+        <div>
+          <a href="#" class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-crimson flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 2C8 2 5 5.5 5 9c0 2.5 1.2 4.7 3 6.1V17a2 2 0 002 2h4a2 2 0 002-2v-1.9c1.8-1.4 3-3.6 3-6.1 0-3.5-3-7-7-7z"/>
+              </svg>
+            </div>
+            <span class="text-parchment font-bold text-lg tracking-tight">Repti<span class="text-crimson">Log</span></span>
+          </a>
+          <p class="text-parchment/30 text-sm leading-relaxed">
+            Professional-grade Herpetoculture &amp; Entomology management for serious keepers and breeders.
+          </p>
+        </div>
+
+        <!-- Links column -->
+        <div>
+          <h4 class="text-parchment/60 text-xs font-semibold uppercase tracking-widest mb-4">Product</h4>
+          <ul class="space-y-2">
+            <li><a href="#features" class="text-parchment/40 hover:text-parchment text-sm transition-colors">Features</a></li>
+            <li><a href="#how-it-works" class="text-parchment/40 hover:text-parchment text-sm transition-colors">Technology</a></li>
+            <li><a href="#pricing" class="text-parchment/40 hover:text-parchment text-sm transition-colors">Pricing</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact column -->
+        <div>
+          <h4 class="text-parchment/60 text-xs font-semibold uppercase tracking-widest mb-4">Company</h4>
+          <ul class="space-y-2">
+            <!-- REPLACE: update href with your actual contact/email -->
+            <li>
+              <a href="mailto:contact@redrockexoticreptiles.com"
+                 class="text-parchment/40 hover:text-parchment text-sm transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                Contact
+              </a>
+            </li>
+            <!-- REPLACE: update href with your actual Privacy Policy URL -->
+            <li>
+              <a href="/privacy-policy.html"
+                 class="text-parchment/40 hover:text-parchment text-sm transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Privacy Policy
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="section-divider mb-8"></div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-parchment/25 text-xs">
+          &copy; <span id="year"></span> Red Rocks Exotic Reptiles. All rights reserved.
+        </p>
+        <p class="text-parchment/15 text-xs tag">
+          Built with ReptiLog &mdash; Professional Herpetoculture Management
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════ -->
+  <script>
+    // ── Dynamic year in footer ──
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── Navbar background on scroll ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('bg-surface/90', 'backdrop-blur-xl', 'border-b', 'border-border-subtle', 'shadow-lg');
+      } else {
+        navbar.classList.remove('bg-surface/90', 'backdrop-blur-xl', 'border-b', 'border-border-subtle', 'shadow-lg');
+      }
+    }, { passive: true });
+
+    // ── Mobile menu toggle ──
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('open');
+    }
+
+    // ── Scroll-reveal ──
+    // Add the js-reveal class to body so CSS hides elements only when JS is active
+    document.body.classList.add('js-reveal');
+
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 4) * 80}ms`;
+      revealObserver.observe(el);
+    });
+  </script>
+
+</body>
+</html>

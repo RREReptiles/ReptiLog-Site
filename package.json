@@ -1,0 +1,16 @@
+{
+  "name": "reptilog-site",
+  "version": "1.0.0",
+  "description": "Website for ReptiLog",
+  "scripts": {
+    "build": "tailwindcss -i ./input.css -o ./styles.css --minify",
+    "watch": "tailwindcss -i ./input.css -o ./styles.css --watch"
+  },
+  "keywords": [],
+  "author": "Red Rocks Exotic Reptiles",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
+    "tailwindcss": "^4.2.4"
+  }
+}
