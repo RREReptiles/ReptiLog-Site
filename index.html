@@ -64,6 +64,152 @@
       border: 1px solid #2a2a2a;
     }
 
+    /* ── Pricing comparison table polish ── */
+    .pricing-table-wrap {
+      background: linear-gradient(180deg, #1a1a1a 0%, #171717 100%);
+      border: 1px solid #2d2d2d;
+      box-shadow: inset 0 1px 0 rgba(226,220,202,0.04), 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .pricing-compare { table-layout: fixed; }
+    .pricing-compare th,
+    .pricing-compare td {
+      vertical-align: top;
+      padding: 18px 20px;
+    }
+    .pricing-compare thead th {
+      padding-top: 24px;
+      padding-bottom: 22px;
+    }
+    .pricing-compare thead th:first-child {
+      width: 26%;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .pricing-plans-banner {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(158,20,3,0.5);
+      background: linear-gradient(140deg, rgba(158,20,3,0.35) 0%, rgba(90,15,8,0.22) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .pricing-plans-banner .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: rgba(226,220,202,0.75);
+      line-height: 1;
+    }
+    .pricing-plans-banner .title {
+      font-size: 1.02rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: #f4efe1;
+      line-height: 1.05;
+    }
+    .pricing-tier-name {
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 0;
+      text-shadow: 0 0 18px rgba(158,20,3,0.18);
+    }
+    .tier-price {
+      font-size: 2.2rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .tier-price-sub {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(226,220,202,0.5);
+    }
+    .glimmer-badge {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 0 20px rgba(158,20,3,0.35);
+    }
+    .glimmer-badge::after {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -150%;
+      width: 90%;
+      height: 320%;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.18) 45%, transparent 70%);
+      transform: rotate(20deg);
+      animation: badge-glimmer 3.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .glimmer-badge-alt {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(226,220,202,0.15), 0 0 16px rgba(226,220,202,0.14);
+    }
+    .glimmer-badge-alt::after {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -150%;
+      width: 90%;
+      height: 320%;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.2) 45%, transparent 70%);
+      transform: rotate(20deg);
+      animation: badge-glimmer 4.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes badge-glimmer {
+      0% { left: -150%; }
+      55% { left: 185%; }
+      100% { left: 185%; }
+    }
+    .pricing-head-cta {
+      display: inline-block;
+      width: 100%;
+      max-width: 210px;
+      margin-top: 14px;
+      text-align: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .pricing-compare tbody th {
+      color: rgba(226,220,202,0.72);
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+    .pricing-compare tbody td {
+      color: rgba(226,220,202,0.85);
+      font-size: 0.86rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+    .pricing-compare tbody tr {
+      border-bottom: 1px solid rgba(58,58,58,0.7);
+    }
+    .pricing-compare tbody tr:last-child { border-bottom: 0; }
+    .pricing-compare tbody tr:hover td,
+    .pricing-compare tbody tr:hover th {
+      background: rgba(255,255,255,0.015);
+    }
+    .pricing-col-popular {
+      background: linear-gradient(180deg, rgba(158,20,3,0.12) 0%, rgba(158,20,3,0.05) 100%);
+    }
+    .pricing-value-off {
+      color: rgba(226,220,202,0.28);
+      font-weight: 500;
+    }
+
     /* ── Divider line ── */
     .section-divider {
       height: 1px;
@@ -239,19 +385,18 @@
 
       <!-- App Store Buttons -->
       <div class="reveal relative z-10 mt-10 flex flex-wrap items-center justify-center gap-4">
-        <!-- REPLACE: link href to your actual App Store URL -->
-        <a href="#" class="store-btn">
+        <!-- iOS app coming soon -->
+        <div class="store-btn opacity-50 cursor-not-allowed" title="iOS app coming soon">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
           </svg>
           <div class="text-left">
-            <div class="text-[10px] text-parchment/50 uppercase tracking-widest leading-none mb-0.5">Download on the</div>
+            <div class="text-[10px] text-parchment/50 uppercase tracking-widest leading-none mb-0.5">Coming Soon on the</div>
             <div class="text-sm font-semibold leading-none">App Store</div>
           </div>
-        </a>
+        </div>
 
-        <!-- REPLACE: link href to your actual Google Play URL -->
-        <a href="#" class="store-btn">
+        <a href="https://play.google.com/store/apps/details?id=com.reptilog.app&pcampaignid=web_share" class="store-btn" target="_blank" rel="noopener noreferrer">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3.18 23.76c.31.17.67.19 1.01.07L14.76 12 3.5.2C3.18.07 2.83.1 2.54.27 2.01.59 1.67 1.17 1.67 1.79v20.42c0 .62.34 1.2.87 1.52h-.37l.01.03zM16.34 13.57l2.59-2.59-2.59-2.59-2.41 2.41 2.41 2.77zM5.13 2.01l9.86 9.99-9.86 9.99V2.01zm13.41 7.87l-1.42-1.42-2.41 2.41 1.42 1.43 2.41-1.42zm0 4.24l-2.41-1.43-1.42 1.43 1.42 1.42 2.41-1.42z"/>
           </svg>
@@ -313,7 +458,7 @@
                 </svg>
               </div>
               <p class="text-parchment/20 text-sm tag">
-                [ dashboard screenshot · drop your mockup here ]
+                [ dashboard coming soon · stay tuned! ]
               </p>
             </div>
           </div>
@@ -619,7 +764,7 @@
          PRICING
     ═══════════════════════════════════════════ -->
     <section id="pricing" class="py-28 px-6">
-      <div class="max-w-5xl mx-auto">
+      <div class="max-w-7xl mx-auto">
 
         <div class="reveal text-center mb-16">
           <span class="badge bg-crimson/10 border border-crimson/30 text-crimson mb-4">Pricing</span>
@@ -631,140 +776,113 @@
           </p>
         </div>
 
-        <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-
-          <!-- ── Basic (Free) ── -->
-          <div class="pricing-basic rounded-2xl p-8 flex flex-col">
-            <div class="mb-6">
-              <div class="text-parchment/40 text-sm font-semibold uppercase tracking-widest mb-2">Basic</div>
-              <div class="flex items-end gap-2 mb-3">
-                <span class="text-5xl font-black text-parchment">Free</span>
-              </div>
-              <p class="text-parchment/40 text-sm leading-relaxed">
-                Perfect for hobbyists and small collections. Everything you need to get organized — no cost, no commitment.
-              </p>
-            </div>
-
-            <ul class="space-y-3 flex-1 mb-8">
-              <li class="flex items-center gap-3">
-                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-parchment/60 text-sm">Up to <span class="text-parchment font-semibold">10 active animals</span></span>
-              </li>
-              <li class="flex items-center gap-3">
-                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-parchment/60 text-sm"><span class="text-parchment font-semibold">Local-only</span> storage — always offline-first</span>
-              </li>
-              <li class="flex items-center gap-3">
-                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-parchment/60 text-sm">Standard species care library</span>
-              </li>
-              <li class="flex items-center gap-3">
-                <svg class="check-icon text-parchment/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-parchment/60 text-sm">Basic logbook (feedings, weights, sheds)</span>
-              </li>
-              <li class="flex items-center gap-3 opacity-40">
-                <svg class="check-icon text-parchment/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-                <span class="text-parchment/40 text-sm">Cloud sync</span>
-              </li>
-              <li class="flex items-center gap-3 opacity-40">
-                <svg class="check-icon text-parchment/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-                <span class="text-parchment/40 text-sm">Advanced incubation tracking</span>
-              </li>
-              <li class="flex items-center gap-3 opacity-40">
-                <svg class="check-icon text-parchment/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-                <span class="text-parchment/40 text-sm">Custom care parameters</span>
-              </li>
-            </ul>
-
-            <!-- REPLACE: link to your app download or sign-up page -->
-            <a href="#"
-               class="w-full text-center py-3.5 rounded-xl border border-border-subtle text-parchment/70 font-semibold text-sm hover:border-parchment/30 hover:text-parchment transition-colors">
-              Download Free
-            </a>
+        <div class="reveal">
+          <div class="pricing-table-wrap overflow-x-auto rounded-2xl">
+            <table class="pricing-compare w-full min-w-[1060px] border-collapse">
+              <thead>
+                <tr class="border-b border-border-subtle">
+                  <th class="text-left text-parchment text-sm font-bold tracking-wide">
+                    <div class="pricing-plans-banner">
+                      <span class="label">ReptiLog</span>
+                      <span class="title">Pricing Plans</span>
+                    </div>
+                  </th>
+                  <th class="text-center border-l border-border-subtle align-top">
+                    <div class="pricing-tier-name text-parchment mb-2">Keeper</div>
+                    <div class="tier-price text-parchment">$0 <span class="tier-price-sub">/ month</span></div>
+                    <div class="text-[11px] uppercase tracking-widest text-parchment/40 mt-1">Free Forever</div>
+                    <a href="#" class="pricing-head-cta border border-border-subtle text-parchment/80 hover:border-parchment/40 hover:text-parchment">
+                      Start Keeper
+                    </a>
+                  </th>
+                  <th class="pricing-col-popular text-center border-l border-border-subtle align-top">
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                      <span class="pricing-tier-name text-crimson">Collector</span>
+                      <span class="badge glimmer-badge bg-crimson text-white text-[10px] border-0">Popular Choice</span>
+                    </div>
+                    <div class="tier-price text-parchment">$6.99 <span class="tier-price-sub">/ month</span></div>
+                    <div class="text-[11px] uppercase tracking-widest text-parchment/40 mt-1">or $69.99 / year</div>
+                    <a href="#" class="pricing-head-cta bg-crimson text-white hover:bg-crimson-light shadow-lg hover:shadow-crimson/40">
+                      Choose Collector
+                    </a>
+                  </th>
+                  <th class="text-center border-l border-border-subtle align-top">
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                      <span class="pricing-tier-name text-parchment">Breeder Pro</span>
+                      <span class="badge glimmer-badge-alt bg-parchment/10 border border-parchment/20 text-parchment text-[10px]">Maximum Efficiency</span>
+                    </div>
+                    <div class="tier-price text-parchment">$19.99 <span class="tier-price-sub">/ month</span></div>
+                    <div class="text-[11px] uppercase tracking-widest text-parchment/40 mt-1">or $199.99 / year</div>
+                    <a href="#" class="pricing-head-cta border border-parchment/30 text-parchment hover:bg-parchment/10">
+                      Choose Breeder Pro
+                    </a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th class="text-left">Animal Limit</th>
+                  <td class="border-l border-border-subtle">Up to 5 Animals</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Up to 50 Animals</td>
+                  <td class="border-l border-border-subtle">Up to 300 Animals</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Basic Husbandry Logging</th>
+                  <td class="border-l border-border-subtle">Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Included</td>
+                  <td class="border-l border-border-subtle">Included</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Taxonomy Categorization</th>
+                  <td class="border-l border-border-subtle">Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Included</td>
+                  <td class="border-l border-border-subtle">Included</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Background Cloud Backup</th>
+                  <td class="border-l border-border-subtle">Basic</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Enhanced</td>
+                  <td class="border-l border-border-subtle">Enhanced</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Visual Measurement &amp; Growth Graphs</th>
+                  <td class="pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Included</td>
+                  <td class="border-l border-border-subtle">Included</td>
+                </tr>
+                <tr>
+                  <th class="text-left">CSV Export</th>
+                  <td class="pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Included</td>
+                  <td class="border-l border-border-subtle">Included</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Real-Time Multi-Device Sync</th>
+                  <td class="pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Included</td>
+                  <td class="border-l border-border-subtle">Included</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Incubation Tracking</th>
+                  <td class="pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Up to 3 Active Clutches</td>
+                  <td class="border-l border-border-subtle">Unlimited Pipelines &amp; Tracking</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Custom Groups / Bulk Logging</th>
+                  <td class="pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="pricing-col-popular border-l border-border-subtle">Custom Groups Included</td>
+                  <td class="border-l border-border-subtle">Advanced Bulk Actions by Zone</td>
+                </tr>
+                <tr>
+                  <th class="text-left">Zone / Rack Management</th>
+                  <td class="pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="pricing-col-popular pricing-value-off border-l border-border-subtle">Not Included</td>
+                  <td class="border-l border-border-subtle">Included</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          <!-- ── Pro ── -->
-          <div class="pricing-pro rounded-2xl p-8 flex flex-col relative overflow-hidden">
-            <!-- Glow blob -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-crimson/10 rounded-full blur-3xl pointer-events-none -z-0"></div>
-
-            <div class="relative z-10">
-              <div class="flex items-center justify-between mb-2">
-                <div class="text-crimson text-sm font-semibold uppercase tracking-widest">Pro</div>
-                <span class="badge bg-crimson text-white text-[10px] border-0">Most Popular</span>
-              </div>
-
-              <div class="flex items-end gap-2 mb-3">
-                <!-- ⚠️ REPLACE: set your actual Pro subscription price before going live.
-                     Example: change '$X' to '$9.99' or '$4.99' etc. -->
-                <span class="text-5xl font-black text-parchment" data-placeholder="pro-price">$X</span>
-                <span class="text-parchment/40 text-sm mb-2">/ month</span>
-              </div>
-              <p class="text-parchment/50 text-sm leading-relaxed mb-6">
-                For professional breeders and serious keepers. Unlock unlimited animals, cloud sync, and advanced tools.
-              </p>
-
-              <ul class="space-y-3 mb-8">
-                <li class="flex items-center gap-3">
-                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <span class="text-parchment/80 text-sm"><span class="text-parchment font-semibold">Unlimited</span> active animals</span>
-                </li>
-                <li class="flex items-center gap-3">
-                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <span class="text-parchment/80 text-sm">Full <span class="text-parchment font-semibold">Supabase cloud sync</span></span>
-                </li>
-                <li class="flex items-center gap-3">
-                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <span class="text-parchment/80 text-sm"><span class="text-parchment font-semibold">Custom care parameters</span> per facility</span>
-                </li>
-                <li class="flex items-center gap-3">
-                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <span class="text-parchment/80 text-sm"><span class="text-parchment font-semibold">Advanced incubation</span> tracking &amp; hatch predictions</span>
-                </li>
-                <li class="flex items-center gap-3">
-                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <span class="text-parchment/80 text-sm">Full breeder pipeline &amp; genetics tools</span>
-                </li>
-                <li class="flex items-center gap-3">
-                  <svg class="check-icon text-crimson" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <span class="text-parchment/80 text-sm">Priority support</span>
-                </li>
-              </ul>
-
-              <!-- REPLACE: link to your Pro subscription or app purchase page -->
-              <a href="#"
-                 class="relative w-full text-center py-3.5 rounded-xl bg-crimson hover:bg-crimson-light text-white font-bold text-sm transition-colors shadow-lg hover:shadow-crimson/40 block">
-                Get Pro
-              </a>
-            </div>
-          </div>
-
         </div>
 
         <!-- Enterprise callout -->
